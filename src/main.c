@@ -27,6 +27,9 @@ void load_todos()
 {
     FILE *file = fopen("todos.txt", "r");
 
+    if (file == NULL)
+        return;
+
     while (fgets(todos[todos_count], 256, file) != NULL)
     {
         todos[todos_count][strcspn(todos[todos_count], "\n")] = '\0';
@@ -63,17 +66,10 @@ void list_todos()
     }
 }
 
-void add_todo()
+void add_todo(char *new_todo)
 {
-    char response[256];
-
-    printf("Enter your todo: ");
-    fgets(response, 256, stdin);
-    // to stop adding \n after user hits return.
-    response[strcspn(response, "\n")] = '\0';
-
     // add to array and increment count:
-    strcpy(todos[todos_count], response);
+    strcpy(todos[todos_count], new_todo);
     todos_count++;
 
     save_todos();
@@ -113,7 +109,14 @@ void route_operation(int operation)
         list_todos();
         break;
     case 2:
-        add_todo();
+        char response[256];
+
+        printf("Enter your todo: ");
+        fgets(response, 256, stdin);
+        // to stop adding \n after user hits return.
+        response[strcspn(response, "\n")] = '\0';
+
+        add_todo(response);
         break;
     case 3:
         remove_todo();
@@ -123,15 +126,4 @@ void route_operation(int operation)
         is_running = false;
         break;
     }
-}
-
-int main(void)
-{
-    load_todos();
-    while (is_running)
-    {
-        int selection = get_operation_from_user();
-        route_operation(selection);
-    }
-    return 0;
 }
