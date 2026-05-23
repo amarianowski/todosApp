@@ -23,6 +23,37 @@ int get_operation_from_user()
     return operation;
 };
 
+void load_todos()
+{
+    FILE *file = fopen("todos.txt", "r");
+
+    while (fgets(todos[todos_count], 256, file) != NULL)
+    {
+        todos[todos_count][strcspn(todos[todos_count], "\n")] = '\0';
+        todos_count++;
+    }
+
+    fclose(file);
+}
+
+void save_todos()
+{
+
+    FILE *file = fopen("todos.txt", "w");
+
+    if (file == NULL)
+    {
+        printf("Error opening file\n");
+        return;
+    }
+
+    for (int i = 0; i < todos_count; i++)
+    {
+        fprintf(file, "%s\n", todos[i]);
+    }
+    fclose(file);
+}
+
 void list_todos()
 {
     int i;
@@ -44,6 +75,8 @@ void add_todo()
     // add to array and increment count:
     strcpy(todos[todos_count], response);
     todos_count++;
+
+    save_todos();
 }
 
 void remove_todo()
@@ -68,6 +101,8 @@ void remove_todo()
         strcpy(todos[i], todos[i + 1]);
     }
     todos_count--;
+
+    save_todos();
 }
 
 void route_operation(int operation)
@@ -92,6 +127,7 @@ void route_operation(int operation)
 
 int main(void)
 {
+    load_todos();
     while (is_running)
     {
         int selection = get_operation_from_user();
