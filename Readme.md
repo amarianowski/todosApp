@@ -1,9 +1,15 @@
-# TODO App
+# ✅ todosApp
 
-- simple todo app written in C
+A simple command-line todo manager written in C. Todos are saved to a file and loaded on startup.
 
-# Running tests
+## 🔨 Build
 
-```C
-gcc main.c test.c -o test && ./test
-```
+    make build
+
+## ▶️ Run
+
+    ./bin/app
+
+## 🧪 Test
+
+    make test
